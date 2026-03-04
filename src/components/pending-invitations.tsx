@@ -5,7 +5,7 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Users, Check, X, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { getRoleBadgeColor } from '../lib/utils';
+import { getRoleBadgeColor, getErrorMessage } from '../lib/utils';
 
 export function PendingInvitations() {
   const { user, allMemberships } = useAuth();
@@ -44,7 +44,7 @@ export function PendingInvitations() {
       const { companyId, error } = await db.acceptInvitationById(invitation.id, user.id);
 
       if (error) {
-        toast.error(`초대 수락 실패: ${error}`);
+        toast.error(getErrorMessage(error));
         setProcessingId(null);
         return;
       }
@@ -65,7 +65,7 @@ export function PendingInvitations() {
       }, 800);
     } catch (error: any) {
       console.error('Error accepting invitation:', error);
-      toast.error(error.message || '초대 수락에 실패했습니다.');
+      toast.error(getErrorMessage(error));
       setProcessingId(null);
     }
   };
@@ -78,7 +78,7 @@ export function PendingInvitations() {
       const { error } = await db.declineInvitation(invitation.id);
 
       if (error) {
-        toast.error(`초대 거절 실패: ${error}`);
+        toast.error(getErrorMessage(error));
         setProcessingId(null);
         return;
       }
@@ -87,7 +87,7 @@ export function PendingInvitations() {
       toast.success('초대를 거절했습니다.');
     } catch (error: any) {
       console.error('Error declining invitation:', error);
-      toast.error(error.message || '초대 거절에 실패했습니다.');
+      toast.error(getErrorMessage(error));
       setProcessingId(null);
     }
   };

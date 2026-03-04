@@ -8,6 +8,7 @@ import { supabase } from '../../lib/supabase';
 import { toast } from 'sonner';
 import { Building2, Mail, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../../lib/auth-context';
+import { getErrorMessage } from '../../lib/utils';
 
 interface LoginFormData {
   email: string;
@@ -81,14 +82,14 @@ export function LoginPage() {
       }
     } catch (error: any) {
       console.error('Auth error:', error);
+      const msg = error?.message ?? '';
 
-      // More user-friendly error messages
-      if (error.message?.includes('Email not confirmed')) {
+      if (msg.includes('Email not confirmed')) {
         toast.error('이메일 인증이 완료되지 않았습니다. 이메일을 확인해주세요.');
-      } else if (error.message?.includes('Invalid login credentials')) {
+      } else if (msg.includes('Invalid login credentials')) {
         toast.error('이메일 또는 비밀번호가 올바르지 않습니다.');
       } else {
-        toast.error(error.message || '오류가 발생했습니다.');
+        toast.error(getErrorMessage(error));
       }
       setSubmitting(false);
     }

@@ -7,6 +7,7 @@ import { db } from '../lib/db';
 import { supabase } from '../lib/supabase';
 import { Building2, User, Bell, Shield } from 'lucide-react';
 import { toast } from 'sonner';
+import { getErrorMessage } from '../lib/utils';
 
 export function SettingsPage() {
   const { user, company, updateCompanyName } = useAuth();
@@ -47,13 +48,13 @@ export function SettingsPage() {
     try {
       const { error } = await db.updateCompanyName(company.id, companyName);
       if (error) {
-        toast.error(`Failed to update company name: ${error}`);
+        toast.error(getErrorMessage(error));
       } else {
         updateCompanyName(companyName.trim());
         toast.success('Company settings saved successfully');
       }
     } catch (err: any) {
-      toast.error(`Error: ${err.message}`);
+      toast.error(getErrorMessage(err));
     } finally {
       setSavingCompany(false);
     }
@@ -72,7 +73,7 @@ export function SettingsPage() {
       // Update user name in users table
       const { error: dbError } = await db.updateUserName(user.id, profileName);
       if (dbError) {
-        toast.error(`Failed to update profile: ${dbError}`);
+        toast.error(getErrorMessage(dbError));
         return;
       }
 
@@ -88,7 +89,7 @@ export function SettingsPage() {
 
       toast.success('Profile saved successfully');
     } catch (err: any) {
-      toast.error(`Error: ${err.message}`);
+      toast.error(getErrorMessage(err));
     } finally {
       setSavingProfile(false);
     }
@@ -105,7 +106,7 @@ export function SettingsPage() {
       );
       toast.success('Notification settings saved successfully');
     } catch (err: any) {
-      toast.error(`Error: ${err.message}`);
+      toast.error(getErrorMessage(err));
     } finally {
       setSavingNotifications(false);
     }
@@ -133,7 +134,7 @@ export function SettingsPage() {
       });
 
       if (error) {
-        toast.error(`Failed to change password: ${error.message}`);
+        toast.error(getErrorMessage(error));
       } else {
         toast.success('Password changed successfully');
         setNewPassword('');
@@ -141,7 +142,7 @@ export function SettingsPage() {
         setShowPasswordForm(false);
       }
     } catch (err: any) {
-      toast.error(`Error: ${err.message}`);
+      toast.error(getErrorMessage(err));
     } finally {
       setSavingPassword(false);
     }
@@ -164,7 +165,7 @@ export function SettingsPage() {
       await supabase.auth.signOut();
       toast.success('You have been logged out. Contact support to complete account deletion.');
     } catch (err: any) {
-      toast.error(`Error: ${err.message}`);
+      toast.error(getErrorMessage(err));
     }
   };
 

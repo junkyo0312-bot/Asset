@@ -9,6 +9,7 @@ import { db } from '../../lib/db';
 import { useAuth } from '../../lib/auth-context';
 import type { Asset, User, AssetAssignment } from '../../lib/types';
 import { toast } from 'sonner';
+import { getErrorMessage } from '../../lib/utils';
 
 export function AssetAssignForm() {
   const { id } = useParams();
@@ -74,14 +75,14 @@ export function AssetAssignForm() {
       });
 
       if (error) {
-        toast.error(`Failed to assign asset: ${error}`);
+        toast.error(getErrorMessage(error));
       } else {
         toast.success('Asset assigned successfully');
         navigate(`/assets/${id}`);
       }
     } catch (err: any) {
       console.error('Error assigning asset:', err);
-      toast.error(`Failed to assign asset: ${err.message}`);
+      toast.error(getErrorMessage(err));
     } finally {
       setSubmitting(false);
     }
@@ -98,14 +99,14 @@ export function AssetAssignForm() {
       const { error } = await db.unassignAsset(id);
 
       if (error) {
-        toast.error(`Failed to unassign asset: ${error}`);
+        toast.error(getErrorMessage(error));
       } else {
         toast.success('Asset unassigned successfully');
         navigate(`/assets/${id}`);
       }
     } catch (err: any) {
       console.error('Error unassigning asset:', err);
-      toast.error(`Failed to unassign asset: ${err.message}`);
+      toast.error(getErrorMessage(err));
     } finally {
       setSubmitting(false);
     }

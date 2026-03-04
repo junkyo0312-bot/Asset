@@ -7,6 +7,20 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/** "Failed to fetch" 등 네트워크/연결 오류일 때 사용자에게 보여줄 메시지 */
+export const NETWORK_ERROR_MESSAGE =
+  '서버에 연결할 수 없습니다. 인터넷 연결을 확인하고, .env에 VITE_SUPABASE_URL과 VITE_SUPABASE_ANON_KEY가 올바른지 확인해 주세요.';
+
+/** 에러 객체에서 사용자에게 보여줄 메시지를 반환 (Failed to fetch 시 안내 문구) */
+export function getErrorMessage(error: unknown): string {
+  const msg =
+    typeof error === 'object' && error && 'message' in error
+      ? String((error as { message?: string }).message)
+      : String(error ?? '');
+  if (msg.includes('Failed to fetch') || msg === 'Load failed') return NETWORK_ERROR_MESSAGE;
+  return msg || '오류가 발생했습니다.';
+}
+
 // Date formatting
 export function formatDate(date: Date | string): string {
   return format(new Date(date), 'MMM dd, yyyy');

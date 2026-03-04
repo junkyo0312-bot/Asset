@@ -10,6 +10,7 @@ import { db } from '../../lib/db';
 import { useAuth } from '../../lib/auth-context';
 import type { Category, OrgUnit, Asset } from '../../lib/types';
 import { toast } from 'sonner';
+import { getErrorMessage } from '../../lib/utils';
 
 export function AssetForm() {
   const { id } = useParams();
@@ -81,7 +82,7 @@ export function AssetForm() {
         }
       } catch (error) {
         console.error('Error loading form data:', error);
-        toast.error('Failed to load form data');
+        toast.error(getErrorMessage(error));
       } finally {
         setLoading(false);
       }
@@ -186,7 +187,7 @@ export function AssetForm() {
         console.log('Create asset result:', result);
 
         if (result.error) {
-          toast.error(`Failed to create asset: ${result.error}`);
+          toast.error(`Failed to create asset: ${getErrorMessage(result.error)}`);
           console.error('Create asset error details:', result.error);
           return;
         }
@@ -232,7 +233,7 @@ export function AssetForm() {
       }
     } catch (error) {
       console.error('Error saving asset:', error);
-      toast.error('Failed to save asset');
+      toast.error(getErrorMessage(error));
     } finally {
       setSubmitting(false);
     }

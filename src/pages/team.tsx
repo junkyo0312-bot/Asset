@@ -6,7 +6,7 @@ import { Badge } from '../components/ui/badge';
 import { Mail, UserX, Copy, Trash2, Clock, CheckCircle2 } from 'lucide-react';
 import { db } from '../lib/db';
 import { useAuth } from '../lib/auth-context';
-import { getRoleBadgeColor, formatDate } from '../lib/utils';
+import { getRoleBadgeColor, formatDate, getErrorMessage } from '../lib/utils';
 import { toast } from 'sonner';
 import type { User, Membership, UserRole } from '../lib/types';
 import { Loading } from '../components/ui/loading';
@@ -37,7 +37,7 @@ export function TeamPage() {
         setInvitations(invitationsData);
       } catch (error) {
         console.error('Error loading team data:', error);
-        toast.error('Failed to load team data');
+        toast.error(getErrorMessage(error));
       } finally {
         setLoading(false);
       }
@@ -58,7 +58,7 @@ export function TeamPage() {
       const { invitation, error } = await db.createInvitation(company.id, inviteEmail, inviteRole);
 
       if (error) {
-        toast.error(error);
+        toast.error(getErrorMessage(error));
         return;
       }
 
@@ -80,7 +80,7 @@ export function TeamPage() {
       }
     } catch (error: any) {
       console.error('Error creating invitation:', error);
-      toast.error(error.message || '초대 생성에 실패했습니다.');
+      toast.error(getErrorMessage(error));
     } finally {
       setSendingInvite(false);
     }
@@ -103,13 +103,13 @@ export function TeamPage() {
     try {
       const { error } = await db.cancelInvitation(invitationId);
       if (error) {
-        toast.error(`초대 취소 실패: ${error}`);
+        toast.error(getErrorMessage(error));
         return;
       }
       setInvitations((prev) => prev.filter((inv) => inv.id !== invitationId));
       toast.success('초대가 취소되었습니다.');
     } catch (error: any) {
-      toast.error(error.message || '초대 취소에 실패했습니다.');
+      toast.error(getErrorMessage(error));
     }
   };
 

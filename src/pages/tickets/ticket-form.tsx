@@ -10,6 +10,7 @@ import { db } from '../../lib/db';
 import { useAuth } from '../../lib/auth-context';
 import type { Asset } from '../../lib/types';
 import { toast } from 'sonner';
+import { getErrorMessage } from '../../lib/utils';
 
 export function TicketForm() {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ export function TicketForm() {
         setAssets(assetsData);
       } catch (error) {
         console.error('Error loading assets:', error);
-        toast.error('Failed to load assets');
+        toast.error(getErrorMessage(error));
       } finally {
         setLoading(false);
       }
@@ -74,7 +75,7 @@ export function TicketForm() {
       const { data: ticketResult, error } = await db.createTicket(ticketData);
 
       if (error) {
-        toast.error(`Failed to create ticket: ${error}`);
+        toast.error(getErrorMessage(error));
         console.error('Create ticket error:', error);
         return;
       }
@@ -83,11 +84,11 @@ export function TicketForm() {
         toast.success('Ticket created successfully');
         navigate('/tickets');
       } else {
-        toast.error('Failed to create ticket: Unknown error');
+        toast.error(getErrorMessage(new Error('Failed to create ticket')));
       }
     } catch (error) {
       console.error('Error creating ticket:', error);
-      toast.error('Failed to create ticket');
+      toast.error(getErrorMessage(error));
     } finally {
       setSubmitting(false);
     }

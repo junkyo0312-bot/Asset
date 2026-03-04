@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { Building2, Users, CheckCircle2, XCircle } from 'lucide-react';
 import { Badge } from '../../components/ui/badge';
 import { useAuth } from '../../lib/auth-context';
+import { getErrorMessage } from '../../lib/utils';
 
 interface SignupFormData {
   email: string;
@@ -71,7 +72,7 @@ export function InviteAcceptPage() {
     try {
       const { error } = await db.acceptInvitation(token, user.id);
       if (error) {
-        toast.error(error);
+        toast.error(getErrorMessage(error));
         setSubmitting(false);
         return;
       }
@@ -85,7 +86,7 @@ export function InviteAcceptPage() {
       }, 1500);
     } catch (err: any) {
       console.error('Error accepting invitation:', err);
-      toast.error(err.message || 'Failed to accept invitation');
+      toast.error(getErrorMessage(err));
       setSubmitting(false);
     }
   };
@@ -136,7 +137,7 @@ export function InviteAcceptPage() {
           // Accept invitation for existing user
           const { error: acceptError } = await db.acceptInvitation(token, authData.user.id);
           if (acceptError) {
-            toast.error(acceptError);
+            toast.error(getErrorMessage(acceptError));
             setSubmitting(false);
             return;
           }
@@ -149,7 +150,7 @@ export function InviteAcceptPage() {
       }
     } catch (error: any) {
       console.error('Auth error:', error);
-      toast.error(error.message || '오류가 발생했습니다.');
+      toast.error(getErrorMessage(error));
       setSubmitting(false);
     }
   };
