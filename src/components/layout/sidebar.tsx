@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import {
   LayoutDashboard,
   Package,
@@ -26,6 +26,7 @@ const navigationItems = [
 
 export function Sidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, company, membership, allMemberships, signOut, switchCompany } = useAuth();
   const isAdmin = membership?.role === 'Admin';
   const [showCompanySelector, setShowCompanySelector] = useState(false);
@@ -37,7 +38,7 @@ export function Sidebar() {
 
   const handleSignOut = async () => {
     await signOut();
-    window.location.href = '/login';
+    navigate('/login', { replace: true });
   };
 
   const handleSwitchCompany = (companyId: string) => {
